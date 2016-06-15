@@ -1803,70 +1803,70 @@ var IgeEntity = IgeObject.extend({
 	 * @private
 	 */
 	_renderEntity: function (ctx) {
-		if (this._opacity > 0) {
-			// Check if the entity has a background pattern
-			if (this._backgroundPattern) {
-				if (!this._backgroundPatternFill) {
-					// We have a pattern but no fill produced
-					// from it. Check if we have a context to
-					// generate a pattern from
-					if (ctx) {
-						// Produce the pattern fill
-						this._backgroundPatternFill = ctx.createPattern(this._backgroundPattern.image, this._backgroundPatternRepeat);
-					}
-				}
-
-				if (this._backgroundPatternFill) {
-					// Draw the fill
-					ctx.save();
-					ctx.fillStyle = this._backgroundPatternFill;
-
-					// TODO: When firefox has fixed their bug regarding negative rect co-ordinates, revert this change
-
-					// This is the proper way to do this but firefox has a bug which I'm gonna report
-					// so instead I have to use ANOTHER translate call instead. So crap!
-					//ctx.rect(-this._bounds2d.x2, -this._bounds2d.y2, this._bounds2d.x, this._bounds2d.y);
-					ctx.translate(-this._bounds2d.x2, -this._bounds2d.y2);
-					ctx.rect(0, 0, this._bounds2d.x, this._bounds2d.y);
-					if (this._backgroundPatternTrackCamera) {
-						ctx.translate(-ige._currentCamera._translate.x, -ige._currentCamera._translate.y);
-						ctx.scale(ige._currentCamera._scale.x, ige._currentCamera._scale.y);
-					}
-					ctx.fill();
-					ige._drawCount++;
-
-					if (this._backgroundPatternIsoTile) {
-						ctx.translate(-Math.floor(this._backgroundPattern.image.width) / 2, -Math.floor(this._backgroundPattern.image.height / 2));
-						ctx.fill();
-						ige._drawCount++;
-					}
-
-					ctx.restore();
-				}
-			}
-
-			var texture = this._texture;
-
-			// Check if the entity is visible based upon its opacity
-			if (texture && texture._loaded) {
-				// Draw the entity image
-				texture.render(ctx, this, ige._tickDelta);
-
-				if (this._highlight) {
-					ctx.globalCompositeOperation = 'lighter';
-					texture.render(ctx, this);
-				}
-			}
-			
-			if (this._compositeCache && ige._currentViewport._drawCompositeBounds) {
-				//console.log('moo');
-				ctx.fillStyle = 'rgba(0, 0, 255, 0.3)';
-				ctx.fillRect(-this._bounds2d.x2, -this._bounds2d.y2, this._bounds2d.x,	this._bounds2d.y);
-				ctx.fillStyle = '#ffffff';
-				ctx.fillText('Composite Entity', -this._bounds2d.x2, -this._bounds2d.y2 - 15);
-				ctx.fillText(this.id(), -this._bounds2d.x2, -this._bounds2d.y2 - 5);
-			}
-		}
+	    if (this._opacity > 0) {
+	        // Check if the entity has a background pattern
+	        if (this._backgroundPattern) {
+	            if (!this._backgroundPatternFill) {
+	                // We have a pattern but no fill produced
+	                // from it. Check if we have a context to
+	                // generate a pattern from
+	                if (ctx) {
+	                    // Produce the pattern fill
+	                    this._backgroundPatternFill = ctx.createPattern(this._backgroundPattern.image, this._backgroundPatternRepeat);
+	                }
+	            }
+	
+	            if (this._backgroundPatternFill) {
+	                // Draw the fill
+	                ctx.save();
+	                ctx.fillStyle = this._backgroundPatternFill;
+	
+	                // TODO: When firefox has fixed their bug regarding negative rect co-ordinates, revert this change
+	
+	                // This is the proper way to do this but firefox has a bug which I'm gonna report
+	                // so instead I have to use ANOTHER translate call instead. So crap!
+	                //ctx.rect(-this._bounds2d.x2, -this._bounds2d.y2, this._bounds2d.x, this._bounds2d.y);
+	                ctx.translate(-this._bounds2d.x2, -this._bounds2d.y2);
+	                ctx.rect(0, 0, this._bounds2d.x, this._bounds2d.y);
+	                if (this._backgroundPatternTrackCamera) {
+	                    ctx.translate(-ige._currentCamera._translate.x * ige._currentCamera._scale.x, -ige._currentCamera._translate.y * ige._currentCamera._scale.y);
+	                    ctx.scale(ige._currentCamera._scale.x, ige._currentCamera._scale.y);
+	                }
+	                ctx.fill();
+	                ige._drawCount++;
+	
+	                if (this._backgroundPatternIsoTile) {
+	                    ctx.translate(-Math.floor(this._backgroundPattern.image.width) / 2, -Math.floor(this._backgroundPattern.image.height / 2));
+	                    ctx.fill();
+	                    ige._drawCount++;
+	                }
+	
+	                ctx.restore();
+	            }
+	        }
+	
+	        var texture = this._texture;
+	
+	        // Check if the entity is visible based upon its opacity
+	        if (texture && texture._loaded) {
+	            // Draw the entity image
+	            texture.render(ctx, this, ige._tickDelta);
+	
+	            if (this._highlight) {
+	                ctx.globalCompositeOperation = 'lighter';
+	                texture.render(ctx, this);
+	            }
+	        }
+	
+	        if (this._compositeCache && ige._currentViewport._drawCompositeBounds) {
+	            //console.log('moo');
+	            ctx.fillStyle = 'rgba(0, 0, 255, 0.3)';
+	            ctx.fillRect(-this._bounds2d.x2, -this._bounds2d.y2, this._bounds2d.x, this._bounds2d.y);
+	            ctx.fillStyle = '#ffffff';
+	            ctx.fillText('Composite Entity', -this._bounds2d.x2, -this._bounds2d.y2 - 15);
+	            ctx.fillText(this.id(), -this._bounds2d.x2, -this._bounds2d.y2 - 5);
+	        }
+	    }
 	},
 
 	/**
